@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src ="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <title>myChart.js chart</title>
+</head>
+<body style="background-color:#f1fac8">
+
+<!--{% if status == "Busy" %}-->
+<!--         <button style="color:red;">ON</button>-->
+<!--        <button>OFF</button>-->
+<!--      {% elif status=="Free" %}-->
+<!--         <button >ON</button>-->
+<!--        <button style="color:red;">OFF</button>-->
+<!--{% else %}-->
+<!--    <h1>Error</h1>-->
+<!--{% endif %}-->
+
+
+<button id="on">男子　使用中 </button>
+<button id="off">男子　空</button><br/>
+
+<button id="on1">女子　使用中</button>
+<button id="off1">女子　空</button>
+<!--<p style="color:gray; font-size:30px;"> The door is {{status}}</p>-->
+
+<script>
+    const source = new EventSource("/real");
+
+    source.onmessage = function (event) {
+    if(event.data === "Free"){
+        document.getElementById("off").style.color="red"
+        document.getElementById("on").style.color="black"
+        }
+    else if(event.data === "Busy"){
+        document.getElementById("on").style.color="red"
+        document.getElementById("off").style.color="black"
+        }
+    }
+
+
+    const source1 = new EventSource("/real1");
+
+    source1.onmessage = function (event) {
+    if(event.data === "Free"){
+        document.getElementById("off1").style.color="red"
+        document.getElementById("on1").style.color="black"
+        }
+    else if(event.data === "Busy"){
+        document.getElementById("on1").style.color="red"
+        document.getElementById("off1").style.color="black"
+        }
+    }
+
+</script>
+
+<div class="container">
+<canvas id = myChart></canvas>
+</div>
+<canvas id="myChart" width="50" height="50"></canvas>
+<script>
+var ctx = document.getElementById('myChart');
+var ctx = canvas.getContext('2d');
+
+var data = results.logTable()
+var labels =results.logTable()
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: lables,
+        datasets: [{
+            lable: Boy,
+            data: data,
+            
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            xAxes: [{
+                type: 'time',
+                time: {
+                    displayFormats: {
+                        quarter: 'MMM YYYY'
+                    }
+                }
+            }],
+
+        }
+    }
+});
+</script>
+
+
+
+
+
+</body>
+</html>

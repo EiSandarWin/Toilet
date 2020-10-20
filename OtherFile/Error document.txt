@@ -1,0 +1,13 @@
+- when click one hour graph can't see.
+ Error -werkzeug.exceptions.BadRequestKeyError
+	BadRequestKeyError: 400 Bad Request: KeyError : 'date'
+
+- Want to see graph (avg min for one day - boy
+					- girl)
+
+- Want to see graph (avg min for one hour - boy
+					  - girl) 
+	
+	avg = min for one day / number of people for one day
+
+- log 2 lines occur

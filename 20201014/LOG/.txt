@@ -1,0 +1,6 @@
+Run at: Wed Apr 22 11:58:20 2020
+Run at: Wed Apr 22 13:28:39 2020
+Run at: Wed Apr 22 13:31:58 2020
+Run at: Wed Apr 22 13:33:31 2020
+Run at: Apr 20 08:29:12 raspberrypi rsyslogd:  [origin software="rsyslogd" swVersion="8.1901.0" x-pid="346" x-info="https://www.rsyslog.com"] rsyslogd was HUPed
+

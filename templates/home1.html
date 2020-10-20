@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang='en')>
+<head>
+    <meta charset="UTF-8">
+    <title>Toilet</title>
+</head>
+
+<body >
+<h1>トイレ　</h1>
+    <button id = "on">使用中</button>
+    <button id ="off">未使用</button>
+
+<p > Date/Time: MM/DD/YYY</p>
+
+<script>
+    const source = new EventSource("/real");
+
+    source.onmessage = function (event) {
+        console.log(event)
+        if(event.data =="Free"){
+	 document.getElementById("on").style.color="black"
+        document.getElementById("off").style.color="red"
+      
+        }
+        else if(event.data ==="Busy"){
+        document.getElementById("on").style.color= "red"
+        document.getElementById("off").style.color="black"
+        }
+
+    }
+</script>
+
+<script>
+    var d = newData().toLocalTimeString();
+    document.getElementById("date").innerHTML = d;
+    
+</script>
+
+</body>
+</html>

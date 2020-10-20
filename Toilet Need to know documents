@@ -1,0 +1,282 @@
+-------------------------------------Toilet Project------------------------------------
+
+------Use file--------------
+-home.py   ----
+-home.html ----For browser
+-wiringthread.py ----For Boy ---- SW-26(0-SW On, 1-SW Off) , LED-12 (0-LED On, 1-LED Off)
+-wiringthread2.py ---For Girl-----SW-17(0-SW On, 1-SW Off) , LED-18 (0-LED On, 1-LED Off)
+-wiringswitch.py ----SW on/off, LED on/off (with wiringpi)
+-switch.py  ---------SW on/off, LED on/off (with GPIO)
+-timerthread.py ------for 3 alert ,using thread timer
+-logTable.py -----------For Database(sqlite3)
+-ToData.db--------Database Name
+-DATA------------Table Name
+-
+
+
+log.txt ----For Boy Log
+log2.txt ---For Girl Log
+
+
+Toilet --Busy,  LED--On , After 5min-->Alert occur,  Next 2min-->Next alert occur, Next 1min-->Next alert occur
+Toilet --Free,  LED--Off
+
+
+
+-----Must----
+-Do file step by step file because the wanted is different
+
+
+----------2020/03/10------Project start--------
+
+
+----Daily Do and Improvement-----
+
+2020/04/01 (For One Toilet)
+-Browser button change--OK
+-log file --OK
+-For only toilet SW-On/Off, LED On/Off--OK
+-Alert 3 times is not same alert --Not OK 
+-Althoug switch off timer count, and then when switch on that count show and alert occur --Not Check
+
+
+2020/04/02 (For Two Toilet)
+-Browser button change--Not OK
+-log file (both) --OK
+-Alert 3 times is not same alert --Not OK 
+-Althoug switch off timer count, and then when switch on that count show and alert occur --Not OK
+-Log file want to save in excel file and want to see with grph for One day, One Week, One Month --Not OK
+
+
+2020/04/03 (For Two Toilet) [20200403(log,button change,swoff_timercount)]
+-Brower button can't change --OK
+-log file (both) --OK
+-Alert 3 times is not same alert --Not OK 
+-Althoug switch off timer count, and then when switch on that count show and alert occur --Not OK
+-Log file want to save in excel file and want to see with grph for One day, One Week, One Month --Not OK
+
+
+2020/04/06 (For Two Toilet) [20200406(log,swoff_timercount)]
+-Brower button can't change --OK
+-log file (both) --OK
+-Alert 3 times is not same alert --Not OK 
+-Althoug switch off timer count, and then when switch on that count show and alert occur -- OK
+-Log file want to save in excel file and want to see with grph for One day, One Week, One Month --Not OK
+-Log show is two lines --Not OK
+-Want to make timer thread----
+
+
+2020/04/07 (For Two Toilet) [20200407(alertone,2swwork,screenok)]
+-Brower button can't change --OK
+-log file (both) --OK
+-Alert 3 times is not same alert --Not OK 
+-Althoug switch off timer count, and then when switch on that count show and alert occur -- OK
+-Log file want to save in excel file and want to see with grph for One day, One Week, One Month --Not OK
+-Log show is two lines --Not OK
+-Want to make timer thread----Not OK
+
+
+2020/04/08 (For Two Toilet)[20200408(timerthreading alert3)]
+-Brower button can't change --OK
+-log file (both) --OK
+-Alert 3 times is not same alert -- OK 
+-Want to make timer thread---- OK
+-Althoug switch off timer count, and then when switch on that count show and alert occur -- OK
+-Log file want to save in excel file and want to see with grph for One day, One Week, One Month --Not OK
+-Log show is two lines --Not OK
+-make MP3 announce at alert 3 times --Not OK(New)
+
+
+2020/04/09 (For Two Toilet)[]
+-Brower button can't change --OK
+-log file (both) --OK
+-Alert 3 times is not same alert -- OK 
+-Want to make timer thread---- OK
+-Althoug switch off timer count, and then when switch on that count show and alert occur -- OK
+-make MP3 announce at alert 3 times --OK(New)
+-Log file want to save in excel file and want to see with grph for One day, One Week, One Month --Not OK
+-Log show is two lines --Not OK
+-Although mp3 sound is ok,L-speaker-->one sound, R-speaker-->other sound --Not OK
+-When announce sound is on,immediately swith off but sound can't stop. --Not OK
+
+
+2020/04/10 (For Two Toilet)[Alert3,sound3 simultaneously]
+-Brower button can't change --OK
+-log file (both) --OK
+-Alert 3 times is not same alert -- OK 
+-Want to make timer thread---- OK
+-Althoug switch off timer count, and then when switch on that count show and alert occur -- OK
+-make MP3 announce at alert 3 times --OK(New)
+-Although mp3 sound is ok,L-speaker-->one sound, R-speaker-->other sound -- OK
+-Log file want to save in excel file and want to see with grph for One day, One Week, One Month --Not OK
+-Log show is two lines --Not OK
+-When announce sound is on,immediately swith off but sound can't stop. --Not OK
+
+
+2020/04/15 (For Two Toilet)[Alert3,sound3 simultaneously,when sound can stop all but can't stop separate song ]
+-Brower button can't change --OK
+-log file (both) --OK
+-Alert 3 times is not same alert -- OK 
+-Want to make timer thread---- OK
+-Althoug switch off timer count, and then when switch on that count show and alert occur -- OK
+-make MP3 announce at alert 3 times --OK(New)
+-Although mp3 sound is ok,L-speaker-->one sound, R-speaker-->other sound -- OK
+-When announce sound is on,immediately swith off but sound can't stop. --OK
+-Log file want to save in excel file and want to see with grph for One day, One Week, One Month --Not OK
+-Log show is two lines --Not OK
+-can't stop separte,when switch off 1->all songs stop --Not OK
+-want to log file at schedule time using cron tab --Not OK
+
+2020/04/16 (For Two Toilet)[announce4 simultaneously,they can stop separate,can't schedule log for on/off log,power on log ]
+-Brower button can't change --OK
+-log file (both) --OK
+-Alert 3 times is not same alert -- OK 
+-Want to make timer thread---- OK
+-Althoug switch off timer count, and then when switch on that count show and alert occur -- OK
+-make MP3 announce at alert 3 times --OK(New)
+-Although mp3 sound is ok,L-speaker-->one sound, R-speaker-->other sound -- OK
+-When announce sound is on,immediately swith off but sound can't stop. --OK
+-can't stop separte,when switch off 1->all songs stop --OK
+-Log file want to save in excel file and want to see with grph for One day, One Week, One Month --Not OK
+-Log show is two lines --Not OK
+-want to log file at schedule time using cron tab --Not OK
+
+
+
+2020/04/21 (For Two Toilet)[announce4 simultaneously,they can stop separate,schedule log for on/off log,power on log,can't power on/off log ]
+-Brower button can't change --OK
+-log file (both) --OK
+-Alert 3 times is not same alert -- OK 
+-Want to make timer thread---- OK
+-Althoug switch off timer count, and then when switch on that count show and alert occur -- OK
+-make MP3 announce at alert 3 times --OK(New)
+-Although mp3 sound is ok,L-speaker-->one sound, R-speaker-->other sound -- OK
+-When announce sound is on,immediately swith off but sound can't stop. --OK
+-can't stop separte,when switch off 1->all songs stop --OK
+-want to log file at schedule time using cron tab -- OK
+-Log file want to save in excel file and want to see with grph for One day, One Week, One Month --Not OK
+-Log show is two lines --Not OK
+-want power on/off log and time interval log(5-10, 10-15,...)
+
+
+2020/05/09(For Two Toilet)[announce4 simultaneously,they can stop separate,schedule log for on/off log,power on log,power off log ]
+-Brower button can't change --OK
+-log file (both) --OK
+-Alert 3 times is not same alert -- OK 
+-Want to make timer thread---- OK
+-Althoug switch off timer count, and then when switch on that count show and alert occur -- OK
+-make MP3 announce at alert 3 times --OK(New)
+-Although mp3 sound is ok,L-speaker-->one sound, R-speaker-->other sound -- OK
+-When announce sound is on,immediately swith off but sound can't stop. --OK
+-can't stop separte,when switch off 1->all songs stop --OK
+-want to log file at schedule time using cron tab -- OK
+-Log show is two lines --OK
+-Log file want to save in DB and want to see with grph for One day, One Week, One Month --Not OK
+-want power on/off log and time interval log(5-10, 10-15,...)
+
+
+2020/05/12(For Two Toilet)[announce4 simultaneously,they can stop separate,schedule log for on/off log,power on log,power off log ]
+-Brower button can't change --OK
+-log file (both) --OK
+-Alert 3 times is not same alert -- OK 
+-Want to make timer thread---- OK
+-Althoug switch off timer count, and then when switch on that count show and alert occur -- OK
+-make MP3 announce at alert 3 times --OK(New)
+-Although mp3 sound is ok,L-speaker-->one sound, R-speaker-->other sound -- OK
+-When announce sound is on,immediately swith off but sound can't stop. --OK
+-can't stop separte,when switch off 1->all songs stop --OK
+-want to log file at schedule time using cron tab -- OK
+-Log show is two lines --OK
+-Log file want to save in DB and want to see with grph for One day, One Week, One Month --Not OK
+-want power on/off log and time interval log(5-10, 10-15,...)
+-want chart for one day--how many log time (log time=use toilet)for boy and girl
+-want chart one hour--how many log time(log time=use toilet) for boy and girl
+-want chart for one day--avg min (Minute for one day/no people for one day) boy and girl
+-want chart for one hour--avg min (Minute for one hour/no people for one hour) boy and girl
+
+
+
+2020/06/13(For Two Toilet)[announce4 simultaneously,they can stop separate,schedule log for on/off log,power on log,power off log ]
+-Brower button can't change --OK
+-log file (both) --OK
+-Alert 3 times is not same alert -- OK 
+-Want to make timer thread---- OK
+-Althoug switch off timer count, and then when switch on that count show and alert occur -- OK
+-make MP3 announce at alert 3 times --OK(New)
+-Although mp3 sound is ok,L-speaker-->one sound, R-speaker-->other sound -- OK
+-When announce sound is on,immediately swith off but sound can't stop. --OK
+-can't stop separte,when switch off 1->all songs stop --OK
+-want to log file at schedule time using cron tab -- OK
+-Log show is two lines --OK
+-Log file want to save in DB and want to see with grph for One day, One Week, One Month --
+-want power on/off log and time interval log(5-10, 10-15,...)-----25/4 
+-want chart for one day--how many log time (log time=use toilet)for boy and girl  -----OK
+-want chart one hour--how many log time(log time=use toilet) for boy and girl
+-want chart for one day--avg min (Minute for one day/no people for one day) boy and girl
+-want chart for one hour--avg min (Minute for one hour/no people for one hour) boy and girl
+
+
+
+
+2020/06/23(For Two Toilet)[announce4 simultaneously,they can stop separate,schedule log for on/off log,power on log,power off log ]
+-Brower button can't change --OK
+-log file (both) --OK
+-Alert 3 times is not same alert -- OK 
+-Want to make timer thread---- OK
+-Althoug switch off timer count, and then when switch on that count show and alert occur -- OK
+-make MP3 announce at alert 3 times --OK(New)
+-Although mp3 sound is ok,L-speaker-->one sound, R-speaker-->other sound -- OK
+-When announce sound is on,immediately swith off but sound can't stop. --OK
+-can't stop separte,when switch off 1->all songs stop --OK
+-want to log file at schedule time using cron tab -- OK
+-Log show is two lines --OK
+-Log file want to save in DB and want to see with grph for One day, One Week, One Month --
+-want power on/off log and time interval log(5-10, 10-15,...)-----25/4 
+-want chart for one day--how many log time (log time=use toilet)for boy and girl  -----OK
+-want chart one hour--how many log time(log time=use toilet) for boy and girl
+-want chart for one day--avg min (Minute for one day/no people for one day) boy and girl
+-want chart for one hour--avg min (Minute for one hour/no people for one hour) boy and girl
+-Want Configuration file for administrator and user
+	administrator--GPIO Sw,GPIO LED can change at config file
+	user-- can change announce time and announce voice
+-Want to place wiringthread and wiringthread2 file at the same place using library
+-using ftp to store the log file at the cloud after each one hour 
+
+-----Target------
+2020/04 
+-Real Door can setup and real Door lock-LED On , Door Open-LED Off
+-To see at browser change 
+
+2020/5
+-To See and save data log in log file and see excel file and graph 
+-For 1day -->1-5min(How many people use) , 6-10min(How many people use), 10-15min(How many people use)
+-For 1week -->1-5min(How many people use) , 6-10min(How many people use), 10-15min(How many people use)
+-For 1month -->1-5min(How many people use) , 6-10min(How many people use), 10-15min(How many people use)
+
+2020/6
+-Real shop at testing above case
+-To See and save data log in log file and see excel file and graph 
+-Save Log file 
+-For 1day -->1-5min(How many people use) , 6-10min(How many people use), 10-15min(How many people use)
+-For 1week -->1-5min(How many people use) , 6-10min(How many people use), 10-15min(How many people use)
+-For 1month -->1-5min(How many people use) , 6-10min(How many people use), 10-15min(How many people use)
+-One shop can see their information only
+-But want to see each shop'information from main center at that town
+-Sever center can see information from the whole shops at that country  
+
+2020/7
+-Real shop at testing above case
+-To See and save data log in log file and see excel file and graph 
+-Save Log file 
+-Testing----Alert occur 
+-Compare the people difference before and after alert occur
+-For 1day -->1-5min(How many people use) , 6-10min(How many people use), 10-15min(How many people use)
+-For 1week -->1-5min(How many people use) , 6-10min(How many people use), 10-15min(How many people use)
+-For 1month -->1-5min(How many people use) , 6-10min(How many people use), 10-15min(How many people use)
+-One shop can see their information only
+-But want to see each shop'information from main center at that town
+-Sever center can see information from the whole shops at that country  
+
+2020/8
+-All complete and use at many shops
+
