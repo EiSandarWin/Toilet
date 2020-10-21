@@ -58,10 +58,10 @@ def blink_led():
         sleep(0.5) # Sleep for 1 second
         wiringpi.digitalWrite(GPIO_LED, 1) # Turn off
         sleep(0.5)
-        global stop_threads 
-        if stop_threads: 
+        global stop_blink
+        if stop_blink:
             break
-stop_threads = False
+    stop_blink = False
 
 def count_people():
     now = datetime.now()
@@ -120,11 +120,11 @@ def thAnn3():
     channel0 = pygame.mixer.Channel(0)
     channel0.play(sound0)
     channel0.set_volume(2.0, 0.0)
-    #logTable.update_table(user_id, 3.0)
-    stop_threads = False
-    start_blink = threading.Thread(target=blink_led, args=())
-    start_blink.start()
-    status_blink = True
+    logTable.update_table(user_id, 3.0)
+#    stop_threads = False
+ #   start_blink = threading.Thread(target=blink_led, args=())
+#    start_blink.start()
+ #   status_blink = True
 
 
 def thAnn4():
@@ -153,10 +153,15 @@ def thAnn5():
 
 
 
+
 def stop_thAnn5():
     th5.cancel()
 
+def stop_blink():
+    tb.cancel()
+
 th1 = threading.Timer(60, thAnn1)
+tb = threading.Timer(60,blink_led)
 th2 = threading.Timer(120, thAnn2)
 th3 = threading.Timer(180, thAnn3)
 th4 = threading.Timer(240, thAnn4)
@@ -168,8 +173,9 @@ def start_waiting():
     global th3
     global th4
     global th5
-
+    global tb
     th1 = threading.Timer(60, thAnn1)
+    tb = threading.Timer(60, blink_led)
     th2 = threading.Timer(120, thAnn2)
     th3 = threading.Timer(180, thAnn3)
     th4 = threading.Timer(240, thAnn4)
@@ -177,6 +183,7 @@ def start_waiting():
 
 
     th1.start()
+    tb.start()
     th2.start()
     th3.start()
     th4.start()
@@ -186,6 +193,7 @@ def start_waiting():
 def stop_waiting():
 
     th1.cancel()
+    tb.cancel()
     th2.cancel()
     th3.cancel()
     th4.cancel()
@@ -202,7 +210,8 @@ def start():
     global start
     global end
     global status_blink
-    global stop_threads
+#    global stop_threads
+    global stop_blink
     global start_blink
 
     start_time = 0
@@ -226,11 +235,16 @@ def start():
         end = datetime.now()
         
         #        print "read0= %d" % read0
+
         if status_blink:
-            if (datetime.now() - durationStop).seconds>3:
-                stop_threads = True
-                start_blink.join()
-                status_blink = False
+            #if (datetime.now() - durationStop).seconds>3:
+
+            stop_blink = False
+            start_blink.start()
+
+            stop_blink = True
+            start_blink.join()
+            status_blink = False
 
         if read1 == read2:
             if read1 == 1:
@@ -248,12 +262,6 @@ def start():
                     # stop_thAnn5()
                     logcount = logcount + 1
                     start_d = datetime.now()
-                    tt = start_d.time()
-                    #if tt > 1.0:
-                    #    stop_threads = False
-                    #    start_blink = threading.Thread(target=blink_led, args=())
-                    #    start_blink.start()
-                    #    status_blink = True
                     start_waiting()
                     print ("person count:" + str(logcount))
                     wiringpi.digitalWrite(GPIO_LED, 0)  # switch on LED. Sets port 12 to 1 (3V3, on)
@@ -268,6 +276,7 @@ def start():
 
             else:
                 stop_waiting()
+
                 durationStop = datetime.now()
                 time_end = datetime.now()
                 duration = time_end - start_d
@@ -276,11 +285,12 @@ def start():
                 pygame.mixer.Channel(0).stop()
                 if temp_count<logcount:
                     duration = str(duration)
-                    store_log(duration + "\n 男子トイレ使用終了\n")
+
                     user_id = logTable.insert_table(1, current_date, current_time, 2, "Boy Free", duration=duration)
                     status("Free")
                     print (duration)
                     print ("\n男子トイレ使用終了")
+                    store_log(duration + "\n 男子トイレ使用終了\n")
                     temp_count = logcount
                 else:
                     logTable.update_table(user_id, duration)
