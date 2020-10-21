@@ -275,7 +275,8 @@ def start():
                 wiringpi.digitalWrite(GPIO_LED, 1) # switch off LED. Sets port 12 to 0 (0V, off)
                 pygame.mixer.Channel(0).stop()
                 if temp_count<logcount:
-                    store_log("男子トイレ使用終了\n")
+                    duration = str(duration)
+                    store_log(duration + "\n 男子トイレ使用終了\n")
                     user_id = logTable.insert_table(1, current_date, current_time, 2, "Boy Free", duration=duration)
                     status("Free")
                     print (duration)
