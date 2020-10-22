@@ -58,12 +58,9 @@ def blink_led():
         sleep(0.5) # Sleep for 1 second
         wiringpi.digitalWrite(GPIO_LED, 1) # Turn off
         sleep(0.5)
-#        global stop_bl
-#        if stop_bl:
-#            break
-#stop_threads = False
-#start_blink.start()
-#status_blink = True
+        stop_blink = False
+        status_blink = True
+
 
 def count_people():
     now = datetime.now()
@@ -159,7 +156,7 @@ def thAnn5():
 def stop_thAnn5():
     th5.cancel()
 
-def stop_bl():
+def stop_blink():
     tb.cancel()
 
 th1 = threading.Timer(60, thAnn1)
@@ -213,7 +210,7 @@ def start():
     global end
     global status_blink
 #    global stop_threads
-    global stop_bl
+    global stop_blink
     global start_blink
 
     start_time = 0
@@ -237,9 +234,14 @@ def start():
         end = datetime.now()
         
         #        print "read0= %d" % read0
+
     #    if status_blink:
             #if (datetime.now() - durationStop).seconds>3:
-    #        stop_bl = True
+
+    #        stop_blink = False
+    #        start_blink.start()
+
+    #        stop_blink = True
     #        start_blink.join()
     #        status_blink = False
 
@@ -250,9 +252,9 @@ def start():
                     thAnn5()
                     start_d = datetime.now()
                     wiringpi.digitalWrite(GPIO_LED, 0) # switch on LED. Sets port 12 to 1 (3V3, on)
-                    # status("Busy")
-                    # print ("\n Boybusy")
-                    # store_log(str(logcount) + "男子 トイレ使用開始\n")
+                    status("Busy")
+                    print ("\n Boybusy")
+                    store_log(str(logcount) + "男子 トイレ使用開始\n")
                     user_id = logTable.insert_table(1, current_date, current_time , 2, "Boy Busy", duration = duration)
 
                 else:
@@ -273,24 +275,24 @@ def start():
 
             else:
                 stop_waiting()
-                stop_bl()
+
                 durationStop = datetime.now()
                 time_end = datetime.now()
                 duration = time_end - start_d
                 duration = duration.seconds/60.0
                 wiringpi.digitalWrite(GPIO_LED, 1) # switch off LED. Sets port 12 to 0 (0V, off)
                 pygame.mixer.Channel(0).stop()
-                if temp_count<logcount:
-                    duration = str(duration)
+ #               if temp_count<logcount:
+ #                   duration = str(duration)
 
-                    user_id = logTable.insert_table(1, current_date, current_time, 2, "Boy Free", duration=duration)
-                    status("Free")
-                    print (duration)
-                    print ("\n男子トイレ使用終了")
-                    store_log(duration + "\n 男子トイレ使用終了\n")
-                    temp_count = logcount
-                else:
-                    logTable.update_table(user_id, duration)
+                user_id = logTable.insert_table(1, current_date, current_time, 2, "Boy Free", duration=duration)
+ #                   status("Free")
+ #                   print (duration)
+ #                   print ("\n男子トイレ使用終了")
+                store_log(" 男子トイレ使用終了\n")
+                #               temp_count = logcount
+ #               else:
+               # logTable.update_table(user_id, duration)
 
         read0 = read1
 

@@ -6,7 +6,7 @@ import threading ,time, json, random
 import wiringthread
 
 import wiringthread2
-import ftp
+#import ftp
 
 import logTable
 

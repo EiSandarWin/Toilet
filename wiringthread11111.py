@@ -52,16 +52,16 @@ counter5 = 0
 user_id = 0
 status_blink = False
 
+stop_blink= False
 def blink_led():
     while True: # Run forever
         wiringpi.digitalWrite(GPIO_LED, 0) # Turn on
         sleep(0.5) # Sleep for 1 second
         wiringpi.digitalWrite(GPIO_LED, 1) # Turn off
         sleep(0.5)
-        global stop_threads 
-        if stop_threads: 
-            break
-stop_threads = False
+        global stop_blink
+        if stop_blink:
+           break
 
 def count_people():
     now = datetime.now()
@@ -121,7 +121,10 @@ def thAnn3():
     channel0.play(sound0)
     channel0.set_volume(2.0, 0.0)
     #logTable.update_table(user_id, 3.0)
-    
+    #stop_threads = False
+    #start_blink = threading.Thread(target=blink_led, args=())
+    #start_blink.start()
+    #status_blink = True
 
 
 def thAnn4():
@@ -153,7 +156,10 @@ def thAnn5():
 def stop_thAnn5():
     th5.cancel()
 
+
+
 th1 = threading.Timer(60, thAnn1)
+thbl = threading.Timer(60, blink_led)
 th2 = threading.Timer(120, thAnn2)
 th3 = threading.Timer(180, thAnn3)
 th4 = threading.Timer(240, thAnn4)
@@ -165,8 +171,10 @@ def start_waiting():
     global th3
     global th4
     global th5
+    global thbl
 
     th1 = threading.Timer(60, thAnn1)
+    thbl = threading.Timer(60, blink_led)
     th2 = threading.Timer(120, thAnn2)
     th3 = threading.Timer(180, thAnn3)
     th4 = threading.Timer(240, thAnn4)
@@ -174,6 +182,7 @@ def start_waiting():
 
 
     th1.start()
+    thbl.start()
     th2.start()
     th3.start()
     th4.start()
@@ -183,6 +192,7 @@ def start_waiting():
 def stop_waiting():
 
     th1.cancel()
+    thbl.cancel()
     th2.cancel()
     th3.cancel()
     th4.cancel()
@@ -193,7 +203,7 @@ def start():
     global counter
     durationStop = datetime.now() - timedelta(days=1)
     duration1 = 0
-    status_toilet = "free"
+    
     start_d = datetime.now()
     global user_id
     global start
@@ -202,7 +212,7 @@ def start():
     global stop_threads
     global start_blink
 
-    start_time = datetime.now()
+    start_time = 0
     read0 = 1
     logcount = count_people()
     temp_count = logcount
@@ -211,32 +221,6 @@ def start():
         time.sleep(0.1)
         read1 = wiringpi.digitalRead(GPIO_SW)
         #        print "read1= %d" % read1
-
-        if status_blink and (status_toilet == "free"):
-            if (datetime.now() - durationStop).seconds>3:
-                print("stop blink")
-                stop_threads = True
-                start_blink.join()
-                status_blink = False
-                duration = (datetime.now() - start_time).seconds /60
-                start_time = datetime.now()
-                duration = str(duration)
-                    
-                store_log(duration + "\n 男子トイレ使用終了\n")
-                #user_id = logTable.insert_table(1, current_date, current_time, 2, "Boy Free", duration=duration)
-                status("Free")
-                print (duration)
-                print ("\n男子トイレ使用終了")
-                temp_count = logcount
-                status_toilet = "free"
-
-        elif (not status_blink) and status_toilet == "busy":
-            if (datetime.now() - start_time).seconds>60:
-                stop_threads = False
-                print("start blink")    
-                start_blink = threading.Thread(target=blink_led, args=())
-                start_blink.start()
-                status_blink = True
         if read0 == read1:
             continue
 
@@ -248,19 +232,15 @@ def start():
         current_time = now.strftime("%H:%M:%S")
         end = datetime.now()
         
-
         #        print "read0= %d" % read0
-        
-        
-    
+
 
         if read1 == read2:
             if read1 == 1:
                 duration1 = datetime.now() - durationStop
-                if (duration1.seconds < 5) and (status_toilet=="busy"):
+                if duration1.seconds < 5 :
                     thAnn5()
                     start_d = datetime.now()
-                    status_toilet = "busy"
                     wiringpi.digitalWrite(GPIO_LED, 0) # switch on LED. Sets port 12 to 1 (3V3, on)
                     # status("Busy")
                     # print ("\n Boybusy")
@@ -269,16 +249,8 @@ def start():
 
                 else:
                     # stop_thAnn5()
-                    start_time = datetime.now()
-                    status_toilet = "busy"
                     logcount = logcount + 1
                     start_d = datetime.now()
-                    # tt = start_d.time()
-                    #if tt > 1.0:
-                    #    stop_threads = False
-                    #    start_blink = threading.Thread(target=blink_led, args=())
-                    #    start_blink.start()
-                    #    status_blink = True
                     start_waiting()
                     print ("person count:" + str(logcount))
                     wiringpi.digitalWrite(GPIO_LED, 0)  # switch on LED. Sets port 12 to 1 (3V3, on)
@@ -293,26 +265,27 @@ def start():
 
             else:
                 stop_waiting()
-                status_toilet = "free"
+                if status_blink:
+                    # if (datetime.now() - durationStop).seconds>3:
+                    stop_blink = True
+                    start_blink.join()
+                    status_blink = False
                 durationStop = datetime.now()
                 time_end = datetime.now()
                 duration = time_end - start_d
                 duration = duration.seconds/60.0
                 wiringpi.digitalWrite(GPIO_LED, 1) # switch off LED. Sets port 12 to 0 (0V, off)
                 pygame.mixer.Channel(0).stop()
-                # if temp_count<logcount:
-                #     duration = str(duration)
-                    
-                #     store_log(duration + "\n 男子トイレ使用終了\n")
-                #     user_id = logTable.insert_table(1, current_date, current_time, 2, "Boy Free", duration=duration)
-                #     status("Free")
-                #     print (duration)
-                #     print ("\n男子トイレ使用終了")
-                #     temp_count = logcount
-                # else:
-                if temp_count > logcount:
-                    logTable.update_table(user_id, duration)
-                    temp_count = logcount
+                #if temp_count<logcount:
+                store_log("男子トイレ使用終了\n")
+                user_id = logTable.insert_table(1, current_date, current_time, 2, "Boy Free", duration=duration)
+                #    status("Free")
+                #    print (duration)
+                #    print ("\n男子トイレ使用終了")
+                  #  temp_count = logcount
+              #  else:
+                  #  logTable.update_table(user_id, duration)
+
         read0 = read1
 
 
