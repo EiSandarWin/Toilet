@@ -7137,16 +7137,3 @@
 [2020/10/22  16:43:38] file open error!!
 [2020/10/22  16:53:38] file open error!!
 [2020/10/22  17:00:20] file open error!!
-[2020/10/23  09:34:01] file open error!!
-[2020/10/23  09:44:25] file open error!!
-[2020/10/23  09:54:55] file open error!!
-[2020/10/23  09:57:59] file open error!!
-[2020/10/23  10:16:14] file open error!!
-[2020/10/23  10:21:58] file open error!!
-[2020/10/23  10:22:46] file open error!!
-[2020/10/23  13:48:55] file open error!!
-[2020/10/23  14:22:15] file open error!!
-[2020/10/23  14:29:45] file open error!!
-[2020/10/23  14:50:31] file open error!!
-[2020/10/23  14:55:09] file open error!!
-[2020/10/23  15:46:41] file open error!!

@@ -221,7 +221,8 @@ def start():
                 duration = (datetime.now() - start_time).seconds /60
                 start_time = datetime.now()
                 duration = str(duration)
-                #store_log(duration + "\n 男子トイレ使用終了\n")
+                    
+                store_log(duration + "\n 男子トイレ使用終了\n")
                 #user_id = logTable.insert_table(1, current_date, current_time, 2, "Boy Free", duration=duration)
                 status("Free")
                 print (duration)
@@ -256,7 +257,7 @@ def start():
         if read1 == read2:
             if read1 == 1:
                 duration1 = datetime.now() - durationStop
-                if (duration1.seconds < 5) :
+                if (duration1.seconds < 5) and (status_toilet=="busy"):
                     thAnn5()
                     start_d = datetime.now()
                     status_toilet = "busy"
@@ -299,9 +300,6 @@ def start():
                 duration = duration.seconds/60.0
                 wiringpi.digitalWrite(GPIO_LED, 1) # switch off LED. Sets port 12 to 0 (0V, off)
                 pygame.mixer.Channel(0).stop()
-                print("\n男子トイレ使用終了")
-                duration = str(duration)
-                store_log(duration + "\n 男子トイレ使用終了\n")
                 # if temp_count<logcount:
                 #     duration = str(duration)
                     
