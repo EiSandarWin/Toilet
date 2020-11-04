@@ -7,7 +7,7 @@ import threading
 import pygame.mixer
 #from pygame.mixer import Sound
 import logTable
-import commentjson
+import json
 
 
 
@@ -21,19 +21,14 @@ pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer =512)
 
 
 with open('/home/pi/Desktop/simple_flask/config.json') as f:
-    config = commentjson.load(f)
+    config = json.load(f)
 GPIO_LED = config["GPIO_LED1"] #GPIO_LED = 12
 GPIO_SW = config["GPIO_SW1"] #GPIO_SW = 26
 
-announce1 = config["Bannounce1"]
-announce2 = config["Bannounce2"]
-announce3 = config["Bannounce3"]
-announce4 = config["Bannounce4"]
-t1 = config["Bthannounce1"]
-t2 = config["Bthannounce2"]
-t3 = config["Bthannounce3"]
-t4 = config["Bthannounce4"]
-t5 = config["Bthannounce5"]
+#announce1 = config["Bannounce1"]
+#announce2 = config["Bannounce2"]
+#announce3 = config["Bannounce3"]
+#announce4 = config["Bannounce4"]
 
 
 wiringpi.wiringPiSetupGpio()
@@ -63,10 +58,10 @@ def blink_led():
         sleep(0.5) # Sleep for 1 second
         wiringpi.digitalWrite(GPIO_LED, 1) # Turn off
         sleep(0.5)
-        global stop_threads 
-        if stop_threads: 
+        global stop_blink
+        if stop_blink:
             break
-stop_threads = False
+    stop_blink = False
 
 def count_people():
     now = datetime.now()
@@ -90,7 +85,7 @@ def thAnn1():
     counter1 += 1
     print ("男子 duration : 1  minutes",counter1)
 #    store_log(str(counter1))
-    sound0 = pygame.mixer.Sound(announce1)
+    sound0 = pygame.mixer.Sound("/home/pi/Desktop/simple_flask/announce/announce1.wav")
     channel0 = pygame.mixer.Channel(0)
     channel0.play(sound0)
     channel0.set_volume(2.0, 0.0)
@@ -105,7 +100,7 @@ def thAnn2():
     counter2 += 1
     print ("男子 duration : 2 minutes", counter2)
 #    store_log(str(counter2))
-    sound0 = pygame.mixer.Sound(announce2)
+    sound0 = pygame.mixer.Sound("/home/pi/Desktop/simple_flask/announce/announce2.wav")
     channel0 = pygame.mixer.Channel(0)
     channel0.play(sound0)
     channel0.set_volume(2.0, 0.0)
@@ -121,12 +116,20 @@ def thAnn3():
     counter3 += 1
     print ("男子 duration : 3  minutes" , counter3)
 #    store_log(str(counter3))
-    sound0 = pygame.mixer.Sound(announce3)
+    sound0 = pygame.mixer.Sound("/home/pi/Desktop/simple_flask/announce/announce3.wav")
     channel0 = pygame.mixer.Channel(0)
     channel0.play(sound0)
     channel0.set_volume(2.0, 0.0)
+
     #logTable.update_table(user_id, 3.0)
     
+
+    logTable.update_table(user_id, 3.0)
+#    stop_threads = False
+ #   start_blink = threading.Thread(target=blink_led, args=())
+#    start_blink.start()
+ #   status_blink = True
+
 
 
 def thAnn4():
@@ -135,7 +138,7 @@ def thAnn4():
     counter4 += 1
     print ("男子 duration : 4  minutes", counter4)
 #    store_log(str(counter4))
-    sound0 = pygame.mixer.Sound(announce4)
+    sound0 = pygame.mixer.Sound("/home/pi/Desktop/simple_flask/announce/announce4.wav")
     channel0 = pygame.mixer.Channel(0)
     channel0.play(sound0)
     channel0.set_volume(2.0, 0.0)
@@ -147,7 +150,7 @@ def thAnn5():
     global user_id
     counter5 += 1
     print ("男子 duration : 5  minutes", counter5)
-    sound0 = pygame.mixer.Sound(announce4)
+    sound0 = pygame.mixer.Sound("/home/pi/Desktop/simple_flask/announce/announce4.wav")
     channel0 = pygame.mixer.Channel(0)
     channel0.play(sound0, 10)
     channel0.set_volume(2.0, 0.0)
@@ -155,14 +158,19 @@ def thAnn5():
 
 
 
+
 def stop_thAnn5():
     th5.cancel()
 
-th1 = threading.Timer(t1, thAnn1)
-th2 = threading.Timer(t2, thAnn2)
-th3 = threading.Timer(t3, thAnn3)
-th4 = threading.Timer(t4, thAnn4)
-th5 = threading.Timer(t5, thAnn5)
+def stop_blink():
+    tb.cancel()
+
+th1 = threading.Timer(60, thAnn1)
+tb = threading.Timer(60,blink_led)
+th2 = threading.Timer(120, thAnn2)
+th3 = threading.Timer(180, thAnn3)
+th4 = threading.Timer(240, thAnn4)
+th5 = threading.Timer(300, thAnn5)
 
 def start_waiting():
     global th1
@@ -170,15 +178,17 @@ def start_waiting():
     global th3
     global th4
     global th5
-
-    th1 = threading.Timer(t1, thAnn1) #
-    th2 = threading.Timer(t2, thAnn2)
-    th3 = threading.Timer(t3, thAnn3)
-    th4 = threading.Timer(t4, thAnn4)
-    th5 = threading.Timer(t5, thAnn5)
+    global tb
+    th1 = threading.Timer(60, thAnn1)
+    tb = threading.Timer(60, blink_led)
+    th2 = threading.Timer(120, thAnn2)
+    th3 = threading.Timer(180, thAnn3)
+    th4 = threading.Timer(240, thAnn4)
+    th5 = threading.Timer(300, thAnn5)
 
 
     th1.start()
+    tb.start()
     th2.start()
     th3.start()
     th4.start()
@@ -188,6 +198,7 @@ def start_waiting():
 def stop_waiting():
 
     th1.cancel()
+    tb.cancel()
     th2.cancel()
     th3.cancel()
     th4.cancel()
@@ -205,6 +216,7 @@ def start():
     global end
     global status_blink
     global stop_threads
+    global stop_blink
     global start_blink
 
     start_time = datetime.now()
@@ -218,7 +230,7 @@ def start():
         #        print "read1= %d" % read1
 
         if status_blink and (status_toilet == "free"):
-            if (datetime.now() - durationStop).seconds>1:
+            if (datetime.now() - durationStop).seconds>3:
                 print("stop blink")
                 stop_threads = True
                 start_blink.join()
@@ -226,8 +238,7 @@ def start():
                 duration = (datetime.now() - start_time).seconds /60
                 start_time = datetime.now()
                 duration = str(duration)
-                    
-                store_log(duration + "\n 男子トイレ使用終了\n")
+                #store_log(duration + "\n 男子トイレ使用終了\n")
                 #user_id = logTable.insert_table(1, current_date, current_time, 2, "Boy Free", duration=duration)
                 status("Free")
                 print (duration)
@@ -250,19 +261,32 @@ def start():
         now = datetime.now()
 #        date_time = now.strftime("[%Y/%m/%d  %H:%M:%S]")
         current_date= now.strftime("%Y:%m:%d")
-        current_time = now.strftime("%H:%M:%f")
+        current_time = now.strftime("%H:%M:%S")
         end = datetime.now()
         
 
         #        print "read0= %d" % read0
+
         
         
     
 
+
+        if status_blink:
+            #if (datetime.now() - durationStop).seconds>3:
+
+            stop_blink = False
+            start_blink.start()
+
+            stop_blink = True
+            start_blink.join()
+            status_blink = False
+
+
         if read1 == read2:
             if read1 == 1:
                 duration1 = datetime.now() - durationStop
-                if (duration1.seconds < 5) :
+                if (duration1.seconds < 3) :
                     thAnn5()
                     start_d = datetime.now()
                     status_toilet = "busy"
@@ -278,12 +302,14 @@ def start():
                     status_toilet = "busy"
                     logcount = logcount + 1
                     start_d = datetime.now()
+
                     # tt = start_d.time()
                     #if tt > 1.0:
                     #    stop_threads = False
                     #    start_blink = threading.Thread(target=blink_led, args=())
                     #    start_blink.start()
                     #    status_blink = True
+
                     start_waiting()
                     print ("person count:" + str(logcount))
                     wiringpi.digitalWrite(GPIO_LED, 0)  # switch on LED. Sets port 12 to 1 (3V3, on)
@@ -298,24 +324,42 @@ def start():
 
             else:
                 stop_waiting()
+
                 status_toilet = "free"
+
                 durationStop = datetime.now()
                 time_end = datetime.now()
                 duration = time_end - start_d
                 duration = duration.seconds/60.0
                 wiringpi.digitalWrite(GPIO_LED, 1) # switch off LED. Sets port 12 to 0 (0V, off)
                 pygame.mixer.Channel(0).stop()
+
+                print("\n男子トイレ使用終了")
+                duration = str(duration)
+                store_log(duration + "\n 男子トイレ使用終了\n")
                 # if temp_count<logcount:
                 #     duration = str(duration)
                     
                 #     store_log(duration + "\n 男子トイレ使用終了\n")
-                user_id = logTable.insert_table(1, current_date, current_time, 2, "Boy Free", duration=duration)
+                #     user_id = logTable.insert_table(1, current_date, current_time, 2, "Boy Free", duration=duration)
                 #     status("Free")
                 #     print (duration)
                 #     print ("\n男子トイレ使用終了")
                 #     temp_count = logcount
                 # else:
-                if temp_count > logcount:
+
+
+                if temp_count<logcount:
+                    duration = str(duration)
+
+                    user_id = logTable.insert_table(1, current_date, current_time, 2, "Boy Free", duration=duration)
+                    status("Free")
+                    print (duration)
+                    print ("\n男子トイレ使用終了")
+                    store_log(duration + "\n 男子トイレ使用終了\n")
+                    temp_count = logcount
+                else:
+
                     logTable.update_table(user_id, duration)
                     temp_count = logcount
         read0 = read1
@@ -324,7 +368,7 @@ def start():
 def store_log(log):
     global logcount
     now = datetime.now()
-    date_time = now.strftime("[%Y/%m/%d  %H:%M:%f]")
+    date_time = now.strftime("[%Y/%m/%d  %H:%M:%S]")
     text_log = date_time + " " + log
     try:
         f = open(log_file, "a+", )
@@ -347,7 +391,7 @@ def status(log):
 
 def store_error(log):
     now = datetime.now()
-    date_time = now.strftime("[%Y/%m/%d  %H:%M:%f]")
+    date_time = now.strftime("[%Y/%m/%d  %H:%M:%S]")
     text_log = date_time + " " + log
     try:
         f = open(error_log, "a+")

@@ -1,16 +1,28 @@
 
 {
-  "GPIO_SW1": 26,
-  "GPIO_SW2": 17,
-  "GPIO_LED1": 12,
-  "GPIO_LED2": 18,
-  "Bannounce1": "/home/pi/Desktop/simple_flask/announce/announce2.wav",
-  "Bannounce2": "/home/pi/Desktop/simple_flask/announce/announce2.wav",
-  "Bannounce3": "/home/pi/Desktop/simple_flask/announce/announce3.wav",
-  "Bannounce4": "/home/pi/Desktop/simple_flask/announce/announce4.wav",
-  "Gannounce1": "/home/pi/Desktop/simple_flask/announce/announce1.wav",
-  "Gannounce2": "/home/pi/Desktop/simple_flask/announce/announce2.wav",
-  "Gannounce3": "/home/pi/Desktop/simple_flask/announce/announce3.wav",
-  "Gannounce4": "/home/pi/Desktop/simple_flask/announce/announce4.wav"
+  "GPIO_SW1": 26, //Boy switch
+  "GPIO_SW2": 17, //Girl switch
+  "GPIO_LED1": 12, //Boy LED
+  "GPIO_LED2": 18, //Girl LED
+
+  "Bannounce1": "/home/pi/Desktop/simple_flask/announce/announce2.wav", //Boy announce1
+  "Bannounce2": "/home/pi/Desktop/simple_flask/announce/announce2.wav", //Boy announce2
+  "Bannounce3": "/home/pi/Desktop/simple_flask/announce/announce3.wav", //Boy announce3
+  "Bannounce4": "/home/pi/Desktop/simple_flask/announce/announce4.wav", //Boy announce4
+  "Gannounce1": "/home/pi/Desktop/simple_flask/announce/announce1.wav", //Girl announce1
+  "Gannounce2": "/home/pi/Desktop/simple_flask/announce/announce2.wav", //Girl announce2
+  "Gannounce3": "/home/pi/Desktop/simple_flask/announce/announce3.wav", //Girl announce3
+  "Gannounce4": "/home/pi/Desktop/simple_flask/announce/announce4.wav", //Girl announce4
+
+  "Bthannounce1": 60,    //Boyannounce1 :1 min
+  "Bthannounce2": 120,   //Boyannounce2 :2 min
+  "Bthannounce3": 180,   //Boyannounce3 :3 min
+  "Bthannounce4": 240,   //Boyannounce4 :4 min
+  "Bthannounce5": 300,    //Boyannounce5 :5 min
+  "Gthannounce1": 60,    //Gannounce1 :1 min
+  "Gthannounce2": 120,   //Gannounce2 :2 min
+  "Gthannounce3": 180,   //Gannounce3 :3 min
+  "Gthannounce4": 240,   //Gannounce4 :4 min
+  "Gthannounce5": 300    //Gannounce5 :5 min
 }
 

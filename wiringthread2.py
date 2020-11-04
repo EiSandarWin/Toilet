@@ -7,27 +7,31 @@ import threading
 import pygame
 from signal import pause
 import logTable
-import json
+import commentjson
 import pygame.mixer
 pygame.mixer.quit()
 
 logTable.create_table()
 
 with open('/home/pi/Desktop/simple_flask/config.json') as f:
-    config = json.load(f)
+    config = commentjson.load(f)
 GPIO_LED = config["GPIO_LED2"]
 GPIO_SW = config["GPIO_SW2"]
+announce1 = config["Gannounce1"]
+announce2 = config["Gannounce2"]
+announce3 = config["Gannounce3"]
+announce4 = config["Gannounce4"]
+t1 = config["Gthannounce1"]
+t2 = config["Gthannounce2"]
+t3 = config["Gthannounce3"]
+t4 = config["Gthannounce4"]
+t5 = config["Gthannounce5"]
+
 pygame.mixer.init()
 #pygame.mixer.pre_init(44100,-16,2, 1024)
 pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer =512)
 #pygame.mixer.stop()
 
-with open ('/home/pi/Desktop/simple_flask/config1.json') as f1:
-    config = json.load(f1)
-announce1 = config["Gannounce1"]
-announce2 = config["Gannounce2"]
-announce3 = config["Gannounce3"]
-announce4 = config["Gannounce4"]
 
 wiringpi.wiringPiSetupGpio()
 
@@ -72,7 +76,7 @@ def thAnn1():
     global user_id
     counter1 += 1
     print ("女子 duration : 1  minutes", counter1)
-    sound1 = pygame.mixer.Sound("/home/pi/Desktop/simple_flask/announce/announce1.wav")
+    sound1 = pygame.mixer.Sound(announce1)
     channel1 = pygame.mixer.Channel(1)
     channel1.play(sound1)
     channel1.set_volume(0.0, 2.0)
@@ -85,7 +89,7 @@ def thAnn2():
     global user_id
     counter2 += 1
     print ("女子 duration : 2  minutes", counter2)
-    sound1 = pygame.mixer.Sound("/home/pi/Desktop/simple_flask/announce/announce2.wav")
+    sound1 = pygame.mixer.Sound(announce2)
     channel1 = pygame.mixer.Channel(1)
     channel1.play(sound1)
     channel1.set_volume(0.0, 2.0)
@@ -97,7 +101,7 @@ def thAnn3():
     global user_id
     counter3 += 1
     print ("女子 duration : 3  minutes", counter3)
-    sound1 = pygame.mixer.Sound("/home/pi/Desktop/simple_flask/announce/announce3.wav")
+    sound1 = pygame.mixer.Sound(announce3)
     channel1 = pygame.mixer.Channel(1)
     channel1.play(sound1)
     channel1.set_volume(0.0, 2.0)
@@ -109,7 +113,7 @@ def thAnn4():
     global user_id
     counter4 += 1
     print ("女子 duration : 4  minutes", counter4)
-    sound1 = pygame.mixer.Sound("/home/pi/Desktop/simple_flask/announce/announce4.wav")
+    sound1 = pygame.mixer.Sound(announce4)
     channel1 = pygame.mixer.Channel(1)
     channel1.play(sound1)
     channel1.set_volume(0.0, 2.0)
@@ -121,7 +125,7 @@ def thAnn5():
     global user_id
     counter5 += 1
     print ("女子 duration : 5  minutes", counter5)
-    sound1 = pygame.mixer.Sound("/home/pi/Desktop/simple_flask/announce/announce4.wav")
+    sound1 = pygame.mixer.Sound(announce4)
     channel1 = pygame.mixer.Channel(1)
     channel1.play(sound1,10)
     channel1.set_volume(0.0, 2.0)
