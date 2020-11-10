@@ -1,9 +1,9 @@
 
 {
-  "GPIO_SW1": 26, //Boy switch
-  "GPIO_SW2": 17, //Girl switch
-  "GPIO_LED1": 12, //Boy LED
-  "GPIO_LED2": 18, //Girl LED
+  "GPIO_SW1": 4, //Boy switch
+  "GPIO_SW2": 5, //Girl switch
+  "GPIO_LED1": 22, //Boy LED
+  "GPIO_LED2": 24, //Girl LED
 
   "Bannounce1": "/home/pi/Desktop/simple_flask/announce/announce2.wav", //Boy announce1
   "Bannounce2": "/home/pi/Desktop/simple_flask/announce/announce2.wav", //Boy announce2

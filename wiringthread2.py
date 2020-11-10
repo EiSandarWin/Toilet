@@ -1,49 +1,55 @@
 # coding: UTF -8
 import wiringpi as wiringpi
-#from time import sleep
+from time import sleep
 from datetime import datetime,timedelta
 import time
 import threading
-import pygame
-from signal import pause
+#import pygame
+#from signal import pause
 import logTable
 import commentjson
 import pygame.mixer
-pygame.mixer.quit()
+
+
+#pygame.mixer.quit()
 
 logTable.create_table()
-
-with open('/home/pi/Desktop/simple_flask/config.json') as f:
-    config = commentjson.load(f)
-GPIO_LED = config["GPIO_LED2"]
-GPIO_SW = config["GPIO_SW2"]
-announce1 = config["Gannounce1"]
-announce2 = config["Gannounce2"]
-announce3 = config["Gannounce3"]
-announce4 = config["Gannounce4"]
-t1 = config["Gthannounce1"]
-t2 = config["Gthannounce2"]
-t3 = config["Gthannounce3"]
-t4 = config["Gthannounce4"]
-t5 = config["Gthannounce5"]
 
 pygame.mixer.init()
 #pygame.mixer.pre_init(44100,-16,2, 1024)
 pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer =512)
 #pygame.mixer.stop()
 
+with open('/home/pi/Desktop/simple_flask/config.json') as f:
+    config = commentjson.load(f)
+GPIO_LED = config["GPIO_LED2"] #GPIO LED=24
+GPIO_SW = config["GPIO_SW2"]   #GPIO SW=5
+
+announce1 = config["Gannounce1"]
+announce2 = config["Gannounce2"]
+announce3 = config["Gannounce3"]
+announce4 = config["Gannounce4"]
+
+t1 = config["Gthannounce1"]
+t2 = config["Gthannounce2"]
+t3 = config["Gthannounce3"]
+t4 = config["Gthannounce4"]
+t5 = config["Gthannounce5"]
+
 
 wiringpi.wiringPiSetupGpio()
 
-wiringpi.pinMode(GPIO_LED, 1)  # sets GPIO 18 to output
-wiringpi.pinMode(GPIO_SW, 0)  # sets GPIO 17 to input
+wiringpi.pinMode(GPIO_LED, 1)  # sets GPIO 24 to output
+wiringpi.pinMode(GPIO_SW, 0)  # sets GPIO 5 to input
 wiringpi.pullUpDnControl(GPIO_SW, wiringpi.PUD_DOWN)
 
-wiringpi.digitalWrite(GPIO_LED, 0)  # sets port 18 to 0 (0V, on)
+wiringpi.digitalWrite(GPIO_LED, 0)  # sets port 24 to 0 (0V, on)
 
 log2_file = "/home/pi/Desktop/simple_flask/LOG/log2.txt"
 error2_log = "/home/pi/Desktop/simple_flask/LOG/error2_log.txt"
 status2_log = "/home/pi/Desktop/simple_flask/LOG/status2_log.txt"
+
+start_blink = None
 
 global counter
 counter1 = 0
@@ -51,8 +57,19 @@ counter2 = 0
 counter3 = 0
 counter4 = 0
 counter5 = 0
-
 user_id = 0
+status2_blink = False
+
+def blink_led():
+    while True:
+        wiringpi.digitalWrite(GPIO_LED,0)
+        sleep(0.5)
+        wiringpi.digitalWrite(GPIO_LED,1)
+        sleep(0.5)
+        global stop_threads
+        if stop2_threads:
+            break
+stop2_threads = False
 
 def count2_people():
     now = datetime.now()
@@ -60,13 +77,12 @@ def count2_people():
     f = open(log2_file, "r", )
     data1 = f.read().split("\n")
     f.close()
-    temp = 0
+    temp2 = 0
     for x in data1:
         if date_time in x:
-            temp = temp + 1
+            temp2 = temp2 + 1
 
-    return temp
-
+    return temp2
 
 
 
@@ -138,11 +154,11 @@ def stop_thAnn5():
 
 
 
-th1 = threading.Timer(60, thAnn1)
-th2 = threading.Timer(120, thAnn2)
-th3 = threading.Timer(180, thAnn3)
-th4 = threading.Timer(240, thAnn4)
-th5 = threading.Timer(300, thAnn5)
+th1 = threading.Timer(t1, thAnn1)
+th2 = threading.Timer(t2, thAnn2)
+th3 = threading.Timer(t3, thAnn3)
+th4 = threading.Timer(t4, thAnn4)
+th5 = threading.Timer(t5, thAnn5)
 
 
 def start_waiting():
@@ -152,11 +168,11 @@ def start_waiting():
     global th4
     global th5
 
-    th1 = threading.Timer(60, thAnn1)
-    th2 = threading.Timer(120, thAnn2)
-    th3 = threading.Timer(180, thAnn3)
-    th4 = threading.Timer(240, thAnn4)
-    th5 = threading.Timer(300, thAnn5)
+    th1 = threading.Timer(t1, thAnn1)
+    th2 = threading.Timer(t2, thAnn2)
+    th3 = threading.Timer(t3, thAnn3)
+    th4 = threading.Timer(t4, thAnn4)
+    th5 = threading.Timer(t5, thAnn5)
 
     th1.start()
     th2.start()
@@ -177,15 +193,49 @@ def stop_waiting():
 def start():
     global counter
     global user_id
-    durationStop = datetime.now() - timedelta(days = 1)
+    global start
+    global end 
+    global status2_blink
+    global start_blink
+    global stop2_threads
+    
+    durationStop2 = datetime.now() - timedelta(days = 1)
     duration2 = 0
+    status2_toilet = "free"
     start_d = datetime.now()
+    start_time = datetime.now()
     read0 = 1
     log2count = count2_people()
+    temp2_count = log2count
+
     while True:
         time.sleep(0.1)
         read1 = wiringpi.digitalRead(GPIO_SW)
         #        print "read1= %d" % read1
+
+        if status2_blink and (status2_toilet == "free"):
+            if (datetime.now() - durationStop2).seconds > 1:
+                print("stop blink")
+                stop2_threads = True
+                start_blink.join()
+                status2_blink = False
+                duration = (datetime.now() - start_time).seconds /60  #For 1 min
+                start_time = datetime.now()
+                duration =str(duration)
+                store2_log(duration + "\n 男子トイレ使用終了\n")
+                status2("free")
+                print (duration)
+                print("\n男子トイレ使用終了")
+                temp2_count = log2count
+                status2_toilet = "free"
+            
+        elif (not status2_blink) and status2_toilet == "busy":
+            if(datetime.now() - start_time).seconds > 60 :
+                stop2_threads = False
+                print("start blink")
+                start_blink = threading.Thread(target = blink_led, args = ())
+                start_blink.start()
+                status2_blink = True
         if read0 == read1:
 
             continue
@@ -195,52 +245,58 @@ def start():
         now = datetime.now()
         current = datetime.now()
         current_date = now.strftime("%Y:%m:%d")
-        current_time = now.strftime("%H:%M:%S")
-   
+        current_time = now.strftime("%H:%M:%f")
+        end = datetime.now()
+
         #        print "read0= %d" % read0
         if read1 == read2:
             if read1 == 1:
-                duration2 = datetime.now() - durationStop
-                print(duration2)
-                if duration2.seconds < 5:
+                duration2 = datetime.now() - durationStop2
+    #            print(duration2)
+                if (duration2.seconds) < 5:
                     thAnn5()
                     start_d = datetime.now()
+                    status2_toilet = "busy"
                     wiringpi.digitalWrite(GPIO_LED, 0) # switch on LED. Sets port 18 to 1 (3V3, on)
-                    store2_log(str(log2count) + "女子 トイレUse\n")
-                    user_id = logTable.insert_table(2, current_date, current_time,0, "Girl Busy", duration = duration)
-                    status2("Busy")
+                    user_id = logTable.insert_table(2, current_date, current_time,2, "Girl Busy", duration = duration)
+            #        status2("Busy")
     #                print ("\n 女子トイレUse")
 
                 else:
-                    stop_thAnn5()
-                    log2count = log2count + 1
+                #    stop_thAnn5()
+                    start2_time = datetime.now()
                     start_d = datetime.now()
+                    status2_toilet = "busy"
+                    log2count = log2count + 1
                     print ("person count:" + str(log2count))
                     start_waiting()
                     wiringpi.digitalWrite(GPIO_LED, 0)  # switch on LED. Sets port 18 to 1 (3V3, on)
                     store2_log(str(log2count) + "女子 トイレBusy\n")
-                    user_id = logTable.insert_table(2, current_date, current_time, 1, "Girl Busy", duration=duration)
+                    
                     status2("Busy")
                     print ("\n 女子トイレBusy\n")
-
+                    user_id = logTable.insert_table(2, current_date, current_time, 1, "Girl Busy", duration=duration)
 
 
 
             else:
 
                 stop_waiting()
-                durationStop = datetime.now()
+                status2_toilet = "free"
+                durationStop2 = datetime.now()
                 time_end = datetime.now()
                 duration = time_end - start_d
                 duration = duration.seconds/60.0
                 wiringpi.digitalWrite(GPIO_LED, 1) # switch off LED. Sets port 18 to 0 (0V, off)
                 pygame.mixer.Channel(1).stop()
-                store2_log("女子 トイレFree\n")
+            #    store2_log("女子 トイレFree\n")
                 user_id = logTable.insert_table(2,current_date, current_time, 2, "Girl Free", duration= duration)
-                print (duration)
-                status2("Free")
-                print ("\n女子トイレFree\n")
-
+            #    print (duration)
+             #   status2("Free")
+             #   print ("\n女子トイレFree\n")
+                if temp2_count > log2count:
+                    logTable.update_table(user_id , duration)
+                    temp2_count = log2count
 
 
         read0 = read1
@@ -248,8 +304,9 @@ def start():
 
 
 def store2_log(log):
+    global log2count
     now = datetime.now()
-    date_time = now.strftime("[%Y/%m/%d  %H:%M:%S]")
+    date_time = now.strftime("[%Y/%m/%d  %H:%M:%f]")
     text_log2 = date_time + " " + log
     try:
         f = open(log2_file, "a+")
@@ -271,7 +328,7 @@ def status2(log):
 
 def store_error2(log):
     now = datetime.now()
-    date_time = now.strftime("[%Y/%m/%d  %H:%M:%S]")
+    date_time = now.strftime("[%Y/%m/%d  %H:%M:%f]")
     text_log = date_time + " " + log
     try:
         f = open(error2_log, "a+")
