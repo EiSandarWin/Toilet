@@ -10,8 +10,8 @@ sqlite_file = '/home/pi/Desktop/simple_flask/ToData.db'
 conn = sqlite3.connect(sqlite_file, check_same_thread=False)
 
 cur = conn.cursor()
-cur.execute("SELECT date, time, kinds ,mode  FROM DATA where kinds = 1")
-
+cur.execute("SELECT date, time, kinds ,mode  FROM DATA ")
+start_time =time.time()
 #Export dat into csv file
 with open ("output.csv", "wb") as out_csv_file:
     csv_out = csv.writer(out_csv_file, delimiter = ";")
@@ -20,9 +20,10 @@ with open ("output.csv", "wb") as out_csv_file:
         csv_out.writerow(result)
 
 
-Output_Directory = "/log"
+Output_Directory = "/log/BH3020667_demo/"
 #cur.close()
-
+duration = time.time() - start_time
+print (duration)
 DataSend = "/home/pi/Desktop/simple_flask/output.csv"
 
 
