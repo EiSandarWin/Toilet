@@ -49,7 +49,7 @@ log2_file = "/home/pi/Desktop/simple_flask/LOG/log2.txt"
 error2_log = "/home/pi/Desktop/simple_flask/LOG/error2_log.txt"
 status2_log = "/home/pi/Desktop/simple_flask/LOG/status2_log.txt"
 
-start_blink = None
+start2_blink = None
 
 global counter
 counter1 = 0
@@ -66,7 +66,7 @@ def blink_led():
         sleep(0.5)
         wiringpi.digitalWrite(GPIO_LED,1)
         sleep(0.5)
-        global stop_threads
+        global stop2_threads
         if stop2_threads:
             break
 stop2_threads = False
@@ -196,7 +196,7 @@ def start():
     global start
     global end 
     global status2_blink
-    global start_blink
+    global start2_blink
     global stop2_threads
     
     durationStop2 = datetime.now() - timedelta(days = 1)
@@ -214,10 +214,10 @@ def start():
         #        print "read1= %d" % read1
 
         if status2_blink and (status2_toilet == "free"):
-            if (datetime.now() - durationStop2).seconds > 1:
+            if (datetime.now() - durationStop2).seconds > 1.0:
                 print("stop blink")
                 stop2_threads = True
-                start_blink.join()
+                start2_blink.join()
                 status2_blink = False
                 duration = (datetime.now() - start_time).seconds /60  #For 1 min
                 start_time = datetime.now()
@@ -233,8 +233,8 @@ def start():
             if(datetime.now() - start_time).seconds > 60 :
                 stop2_threads = False
                 print("start blink")
-                start_blink = threading.Thread(target = blink_led, args = ())
-                start_blink.start()
+                start2_blink = threading.Thread(target = blink_led, args = ())
+                start2_blink.start()
                 status2_blink = True
         if read0 == read1:
 
@@ -243,7 +243,7 @@ def start():
         time.sleep(0.05)
         read2 = wiringpi.digitalRead(GPIO_SW)
         now = datetime.now()
-        current = datetime.now()
+      
         current_date = now.strftime("%Y:%m:%d")
         current_time = now.strftime("%H:%M:%f")
         end = datetime.now()
@@ -253,7 +253,7 @@ def start():
             if read1 == 1:
                 duration2 = datetime.now() - durationStop2
     #            print(duration2)
-                if (duration2.seconds) < 5:
+                if (duration2.seconds) < 3:
                     thAnn5()
                     start_d = datetime.now()
                     status2_toilet = "busy"
@@ -264,7 +264,7 @@ def start():
 
                 else:
                 #    stop_thAnn5()
-                    start2_time = datetime.now()
+                    start_time = datetime.now()
                     start_d = datetime.now()
                     status2_toilet = "busy"
                     log2count = log2count + 1
