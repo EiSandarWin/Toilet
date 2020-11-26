@@ -11,8 +11,28 @@ conn = sqlite3.connect(sqlite_file, check_same_thread=False)
 def create_table():
     cur = conn.cursor()
     cur.execute(
-        "CREATE TABLE IF NOT EXISTS DATA(id INTEGER PRIMARY KEY,kinds INT, date DATETIME,time DATETIME, mode INT, message TEXT , duration FLOAT )")
+        "CREATE TABLE IF NOT EXISTS DATA(id INTEGER PRIMARY KEY,kinds INT, date DATETIME,time DATETIME, mode INT, message TEXT , duration FLOAT )"  )     
+
     cur.close()
+
+def create_table():
+    cur = conn.cursor()
+    cur.execute(
+        "CREATE TABLE IF NOT EXISTS SYSTEM(FTPTIME DATETIME)")
+       
+    cur.close()
+
+    
+
+def insert_table1(FTPTIME):
+    cur = conn.cursor()
+    cur.execute("INSERT INTO SYSTEM (FTPTIME ) VALUES (?)",
+                (FTPTIME,))
+
+    conn.commit()
+    cur.close()
+    return cur.lastrowid
+
 
 
 def insert_table(kinds, date,time, mode, message, duration=0):
@@ -67,6 +87,10 @@ def update_table(user_id, duration):
     conn.commit()
     cur.close()
 
-
-
+def update_table1(FTP):
+    cur = conn.cursor()
+    cur.execute("UPDATE SYSTEM SET FTP = ? ",(FTP))
+    conn.commit()
+    cur.close()
+#
 #print(average_one_day())
