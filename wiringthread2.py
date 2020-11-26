@@ -214,7 +214,7 @@ def start():
         #        print "read1= %d" % read1
 
         if status2_blink and (status2_toilet == "free"):
-            if (datetime.now() - durationStop2).seconds > 1.0:
+            if (datetime.now() - durationStop2).seconds > 1:
                 print("stop blink")
                 stop2_threads = True
                 start2_blink.join()
@@ -243,8 +243,8 @@ def start():
         time.sleep(0.05)
         read2 = wiringpi.digitalRead(GPIO_SW)
         now = datetime.now()
-      
-        current_date = now.strftime("%Y:%m:%d")
+        current = datetime.now()
+        current_date = now.strftime("%Y/%m/%d %H:%M:%f")
         current_time = now.strftime("%H:%M:%f")
         end = datetime.now()
 
@@ -253,7 +253,7 @@ def start():
             if read1 == 1:
                 duration2 = datetime.now() - durationStop2
     #            print(duration2)
-                if (duration2.seconds) < 3:
+                if (duration2.seconds) < 5:
                     thAnn5()
                     start_d = datetime.now()
                     status2_toilet = "busy"

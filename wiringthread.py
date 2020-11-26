@@ -249,7 +249,7 @@ def start():
         read2 = wiringpi.digitalRead(GPIO_SW)
         now = datetime.now()
 #        date_time = now.strftime("[%Y/%m/%d  %H:%M:%S]")
-        current_date= now.strftime("%Y:%m:%d")
+        current_date= now.strftime("%Y/%m/%d %H:%M:%f")
         current_time = now.strftime("%H:%M:%f")
         end = datetime.now()
         
